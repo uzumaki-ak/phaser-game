@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    background-color: #8ED6FF; /* Sky Blue fallback */
+    overflow: hidden;
+    font-family: 'Nunito', sans-serif;
+    touch-action: none;
+}
+
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    display: block;
+    image-rendering: optimizeSpeed; /* Fallback */
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+@font-face {
+    font-family: 'Fredoka One';
+    src: local('Fredoka One');
+}
+
+@font-face {
+    font-family: 'Nunito';
+    src: local('Nunito');
+}
