@@ -109,6 +109,16 @@ export default class LevelScene extends Phaser.Scene {
             loop: true
         });
 
+        // Voice narration on Level Start!
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const textToSpeak = `${this.levelData.title}. ${this.levelData.tutorial}`;
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.rate = 1.0;
+            utterance.pitch = 1.1; // Cute, child-friendly pitch
+            window.speechSynthesis.speak(utterance);
+        }
+
         // Top Right UI Buttons
         this.helpBtn = new RoundedButton(this, width - 240, 60, 80, 80, '?', '#9B5DE5', () => {
             audio.playPop();

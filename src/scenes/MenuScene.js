@@ -32,15 +32,15 @@ export default class MenuScene extends Phaser.Scene {
         });
 
         // Title
-        const title = this.add.text(width / 2, height / 3, 'CODING\nADVENTURE', {
+        const title = this.add.text(width / 2, height / 3, 'ROBO\nHERO', {
             fontFamily: 'Fredoka One',
-            fontSize: '80px',
+            fontSize: '85px',
             fill: '#FFF',
             align: 'center',
             stroke: '#9B5DE5',
             strokeThickness: 12
         }).setOrigin(0.5);
-
+ 
         // Title float animation
         this.tweens.add({
             targets: title,
@@ -50,7 +50,7 @@ export default class MenuScene extends Phaser.Scene {
             repeat: -1,
             ease: 'Sine.easeInOut'
         });
-
+ 
         // Add Robot sprite for decoration
         const robot = this.add.sprite(width / 2, height / 2 + 50, 'robot_sprite');
         
@@ -79,15 +79,37 @@ export default class MenuScene extends Phaser.Scene {
         });
 
         // Play Button
-        const playBtn = new RoundedButton(this, width / 2, height * 0.8, 240, 80, 'PLAY!', '#95E1A3', () => {
+        const playBtn = new RoundedButton(this, width / 2, height * 0.76, 240, 80, 'PLAY!', '#95E1A3', () => {
             audio.playPop();
             audio.startBGM();
+            
+            // Voice narration on Play!
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance("Drag command blocks to guide your cute robot hero to the gold star!");
+                utterance.rate = 1.0;
+                utterance.pitch = 1.1; // Cute, child-friendly pitch
+                window.speechSynthesis.speak(utterance);
+            }
+ 
             // Exit animation
             this.cameras.main.fadeOut(500, 142, 214, 255);
             this.cameras.main.once('camerafadeoutcomplete', () => {
                 this.scene.start('LevelSelectScene');
             });
         });
+ 
+        // One-sentence Game Description below PLAY button
+        const descText = this.add.text(width / 2, height * 0.87, 'Drag command blocks to guide your cute robot hero to the gold star!', {
+            fontFamily: 'Nunito',
+            fontSize: '18px',
+            fill: '#FFF',
+            fontStyle: 'bold',
+            align: 'center',
+            stroke: '#000000',
+            strokeThickness: 5,
+            wordWrap: { width: width * 0.8, useAdvancedWrap: true }
+        }).setOrigin(0.5);
 
         // Resize handler
         this.scale.on('resize', this.resize, this);
