@@ -47,7 +47,7 @@ export default class HelpPopup extends Phaser.GameObjects.Container {
             "1. Drag coding blocks from the\nbottom right into the empty slots.\n" +
             "2. Read the level hint!\n" +
             "3. Click RUN! to watch your robot go.\n" +
-            "4. Reach the Star to win!";
+            "4. Save the Puppy to win!";
             
         const info = scene.add.text(0, 0, textContent, {
             fontFamily: 'Nunito',

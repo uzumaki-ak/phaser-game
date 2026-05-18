@@ -50,6 +50,62 @@ class AudioManager {
         });
     }
 
+    playBark() {
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+        const now = this.ctx.currentTime;
+        
+        // Impulse 1 (Main bark sound)
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(300, now + 0.12);
+        
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+        
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+        osc.start(now);
+        osc.stop(now + 0.12);
+        
+        // Impulse 2 (Quick secondary yip)
+        const osc2 = this.ctx.createOscillator();
+        const gain2 = this.ctx.createGain();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(700, now + 0.05);
+        osc2.frequency.exponentialRampToValueAtTime(350, now + 0.15);
+        
+        gain2.gain.setValueAtTime(0.3, now + 0.05);
+        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        
+        osc2.connect(gain2);
+        gain2.connect(this.masterGain);
+        osc2.start(now + 0.05);
+        osc2.stop(now + 0.15);
+    }
+
+    playWhimper() {
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(900, now);
+        osc.frequency.linearRampToValueAtTime(1200, now + 0.15);
+        osc.frequency.linearRampToValueAtTime(800, now + 0.35);
+        
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.linearRampToValueAtTime(0.2, now + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+        osc.start(now);
+        osc.stop(now + 0.35);
+    }
+
     startBGM() {
         if (this.isMusicPlaying) return;
         this.isMusicPlaying = true;

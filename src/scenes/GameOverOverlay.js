@@ -49,22 +49,21 @@ export default class GameOverOverlay extends Phaser.Scene {
             strokeThickness: 10
         }).setOrigin(0.5);
 
-        // Stars / Icon
-        const iconSymbol = this.isWin ? '🏆' : (this.isTimeout ? '⏰' : '🤖');
-        const icon = this.add.text(width/2, height/2 - 50, iconSymbol, {
-            fontSize: '80px'
-        }).setOrigin(0.5);
-
+        // Rescued Puppy Icon (Beautiful vector asset, no cheap emojis!)
+        const iconKey = this.isWin ? 'puppy_happy' : 'puppy_sad';
+        const icon = this.add.sprite(width/2, height/2 - 50, iconKey);
+        icon.setScale(1.6);
+ 
         this.tweens.add({
             targets: icon,
-            scaleX: 1.2,
-            scaleY: 1.2,
-            duration: 500,
+            scaleX: 1.9,
+            scaleY: 1.9,
+            duration: 600,
             yoyo: true,
             repeat: -1,
             ease: 'Sine.easeInOut'
         });
-
+ 
         if (this.isWin) {
             // Stats Text
             this.add.text(width/2, height/2 + 30, `Time Taken: ${this.timeTaken}s`, {
@@ -80,7 +79,7 @@ export default class GameOverOverlay extends Phaser.Scene {
             }).setOrigin(0.5);
         } else {
             // Lose motivation text
-            const loseMsg = this.isTimeout ? "You ran out of time!" : "Oops! The robot got stuck.";
+            const loseMsg = this.isTimeout ? "Time ran out to save the puppy!" : "Oops! Robo got stuck. Let's try again!";
             this.add.text(width/2, height/2 + 50, loseMsg, {
                 fontFamily: 'Nunito',
                 fontSize: '24px',

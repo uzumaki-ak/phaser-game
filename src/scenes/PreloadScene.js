@@ -82,23 +82,138 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     generateVectorAssets() {
-        // --- Generate Goal Star ---
-        const starCanvas = document.createElement('canvas');
-        starCanvas.width = 64; starCanvas.height = 64;
-        const sCtx = starCanvas.getContext('2d');
-        sCtx.translate(32, 32);
-        for(let i=0; i<5; i++) {
-            sCtx.fillStyle = '#FFD93D';
-            sCtx.beginPath();
-            sCtx.moveTo(0, -24); sCtx.lineTo(6, -8); sCtx.lineTo(24, -6);
-            sCtx.lineTo(10, 4); sCtx.lineTo(14, 22); sCtx.lineTo(0, 12);
-            sCtx.lineTo(-14, 22); sCtx.lineTo(-10, 4); sCtx.lineTo(-24, -6);
-            sCtx.lineTo(-6, -8); sCtx.fill();
-            sCtx.fillStyle = '#FFF8E7'; 
-            sCtx.beginPath(); sCtx.moveTo(0, -20); sCtx.lineTo(4, -8); sCtx.lineTo(0, -4); sCtx.lineTo(-4, -8); sCtx.fill();
-            sCtx.rotate((Math.PI * 2) / 5);
-        }
-        this.textures.addSpriteSheet('star', starCanvas, { frameWidth: 64, frameHeight: 64 });
+        // --- Generate Goal Puppy (Happy) ---
+        const pupCanvas = document.createElement('canvas');
+        pupCanvas.width = 64; pupCanvas.height = 64;
+        const pCtx = pupCanvas.getContext('2d');
+        
+        // Draw body
+        pCtx.fillStyle = '#C49A6C'; // Cream/brown color
+        pCtx.beginPath();
+        pCtx.arc(32, 40, 16, 0, Math.PI * 2); // Body
+        pCtx.fill();
+        
+        // Draw head
+        pCtx.fillStyle = '#D4A373'; // Head base color
+        pCtx.beginPath();
+        pCtx.arc(32, 28, 14, 0, Math.PI * 2); // Head
+        pCtx.fill();
+        
+        // Draw ears (floppy)
+        pCtx.fillStyle = '#A06E3F'; // Darker brown for ears
+        // Left ear
+        pCtx.beginPath();
+        pCtx.ellipse(18, 28, 5, 12, Math.PI / 12, 0, Math.PI * 2);
+        pCtx.fill();
+        // Right ear
+        pCtx.beginPath();
+        pCtx.ellipse(46, 28, 5, 12, -Math.PI / 12, 0, Math.PI * 2);
+        pCtx.fill();
+        
+        // Draw muzzle (snout)
+        pCtx.fillStyle = '#FFF8E7';
+        pCtx.beginPath();
+        pCtx.arc(32, 33, 5, 0, Math.PI * 2);
+        pCtx.fill();
+        
+        // Draw nose
+        pCtx.fillStyle = '#333333';
+        pCtx.beginPath();
+        pCtx.arc(32, 31, 2.5, 0, Math.PI * 2);
+        pCtx.fill();
+        
+        // Draw eyes
+        pCtx.fillStyle = '#111111';
+        pCtx.beginPath();
+        pCtx.arc(26, 25, 2, 0, Math.PI * 2); // Left eye
+        pCtx.arc(38, 25, 2, 0, Math.PI * 2); // Right eye
+        pCtx.fill();
+        
+        // Eye reflections
+        pCtx.fillStyle = '#FFFFFF';
+        pCtx.beginPath();
+        pCtx.arc(25.5, 24.5, 0.7, 0, Math.PI * 2);
+        pCtx.arc(37.5, 24.5, 0.7, 0, Math.PI * 2);
+        pCtx.fill();
+        
+        // Little happy tongue
+        pCtx.fillStyle = '#FF8FAB';
+        pCtx.beginPath();
+        pCtx.arc(32, 35.5, 2, 0, Math.PI);
+        pCtx.fill();
+
+        this.textures.addSpriteSheet('puppy_happy', pupCanvas, { frameWidth: 64, frameHeight: 64 });
+
+        // --- Generate Goal Puppy (Sad) ---
+        const pupSadCanvas = document.createElement('canvas');
+        pupSadCanvas.width = 64; pupSadCanvas.height = 64;
+        const psCtx = pupSadCanvas.getContext('2d');
+        
+        // Draw body
+        psCtx.fillStyle = '#C49A6C';
+        psCtx.beginPath();
+        psCtx.arc(32, 40, 16, 0, Math.PI * 2);
+        psCtx.fill();
+        
+        // Draw head
+        psCtx.fillStyle = '#D4A373';
+        psCtx.beginPath();
+        psCtx.arc(32, 30, 14, 0, Math.PI * 2); // Head slightly lower
+        psCtx.fill();
+        
+        // Draw ears (droopy/longer)
+        psCtx.fillStyle = '#A06E3F';
+        // Left ear droops down more vertically
+        psCtx.beginPath();
+        psCtx.ellipse(17, 34, 5, 14, 0, 0, Math.PI * 2);
+        psCtx.fill();
+        // Right ear
+        psCtx.beginPath();
+        psCtx.ellipse(47, 34, 5, 14, 0, 0, Math.PI * 2);
+        psCtx.fill();
+        
+        // Draw muzzle
+        psCtx.fillStyle = '#FFF8E7';
+        psCtx.beginPath();
+        psCtx.arc(32, 35, 5, 0, Math.PI * 2);
+        psCtx.fill();
+        
+        // Draw nose
+        psCtx.fillStyle = '#333333';
+        psCtx.beginPath();
+        psCtx.arc(32, 33, 2.5, 0, Math.PI * 2);
+        psCtx.fill();
+        
+        // Draw sad eyes
+        psCtx.fillStyle = '#111111';
+        psCtx.beginPath();
+        psCtx.arc(26, 27, 2, 0, Math.PI * 2); // Left eye
+        psCtx.arc(38, 27, 2, 0, Math.PI * 2); // Right eye
+        psCtx.fill();
+        
+        // Worried/sad eyebrows
+        psCtx.strokeStyle = '#A06E3F';
+        psCtx.lineWidth = 1.5;
+        psCtx.beginPath();
+        psCtx.moveTo(23, 23); psCtx.lineTo(28, 25); // Left eyebrow (slanted up-middle)
+        psCtx.moveTo(41, 23); psCtx.lineTo(36, 25); // Right eyebrow (slanted up-middle)
+        psCtx.stroke();
+
+        this.textures.addSpriteSheet('puppy_sad', pupSadCanvas, { frameWidth: 64, frameHeight: 64 });
+
+        // --- Generate Heart Particle ---
+        const heartCanvas = document.createElement('canvas');
+        heartCanvas.width = 16; heartCanvas.height = 16;
+        const hCtx = heartCanvas.getContext('2d');
+        hCtx.fillStyle = '#FF8FAB'; // Candy Pink
+        hCtx.beginPath();
+        hCtx.moveTo(8, 4);
+        hCtx.bezierCurveTo(8, 1, 3, 1, 3, 4);
+        hCtx.bezierCurveTo(3, 8, 8, 11, 8, 14);
+        hCtx.bezierCurveTo(8, 11, 13, 8, 13, 4);
+        hCtx.bezierCurveTo(13, 1, 8, 1, 8, 4);
+        hCtx.fill();
+        this.textures.addSpriteSheet('heart', heartCanvas, { frameWidth: 16, frameHeight: 16 });
 
         // --- Generate Grid Tile ---
         const tileCanvas = document.createElement('canvas');

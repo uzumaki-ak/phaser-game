@@ -10,33 +10,33 @@ export default class LevelScene extends Phaser.Scene {
         super('LevelScene');
         this.levels = [
             {
-                title: "Level 1: First Steps",
+                title: "Level 1: Save the Puppy!",
                 gridWidth: 5, gridHeight: 3,
                 robotStart: { x: 0, y: 1 },
                 goal: { x: 4, y: 1 },
                 blocks: ['FORWARD', 'FORWARD', 'FORWARD', 'FORWARD'],
                 maxSlots: 4,
-                tutorial: "Drag FORWARD blocks to reach the star!"
+                tutorial: "Help Robo Hero reach the lost puppy!"
             },
             {
-                title: "Level 2: Turn Around",
+                title: "Level 2: Backroad Rescue",
                 gridWidth: 5, gridHeight: 4,
                 robotStart: { x: 0, y: 0 },
                 goal: { x: 2, y: 2 },
                 blocks: ['FORWARD', 'FORWARD', 'RIGHT', 'FORWARD', 'FORWARD', 'LEFT'],
                 maxSlots: 6,
-                tutorial: "Use LEFT and RIGHT to navigate!",
+                tutorial: "Help Robo Hero navigate the backyard!",
                 timeLimit: 60
             },
             {
-                title: "Level 3: Jump Gap",
+                title: "Level 3: Across the Gap",
                 gridWidth: 6, gridHeight: 3,
                 robotStart: { x: 0, y: 1 },
                 goal: { x: 5, y: 1 },
                 holes: [{x: 2, y: 1}],
                 blocks: ['FORWARD', 'JUMP', 'FORWARD', 'FORWARD'],
                 maxSlots: 4,
-                tutorial: "Use JUMP to cross the gaps!",
+                tutorial: "Leap over the candy gap to save the puppy!",
                 timeLimit: 90
             }
         ];
@@ -55,6 +55,7 @@ export default class LevelScene extends Phaser.Scene {
         // Setup variables
         this.isExecuting = false;
         this.isGameOver = false;
+        this.puppyRescued = false;
         this.commandSlots = [];
         this.availableBlocks = [];
         this.levelData = this.levels[this.currentLevelIndex];
@@ -158,11 +159,11 @@ export default class LevelScene extends Phaser.Scene {
             }
         }
 
-        // Draw Goal Star
+        // Draw Rescued Puppy
         this.goal = this.add.sprite(
             this.gridStartX + this.levelData.goal.x * this.gridSize,
             this.gridStartY + this.levelData.goal.y * this.gridSize,
-            'star'
+            'puppy_happy'
         );
         this.tweens.add({
             targets: this.goal,
@@ -310,16 +311,36 @@ export default class LevelScene extends Phaser.Scene {
     winLevel() {
         if (this.isGameOver) return;
         this.isGameOver = true;
+        
+        // Play cute bark and win chime
+        audio.playBark();
         audio.playWin();
+        
         this.robot.celebrate();
         this.cameras.main.zoomTo(1.2, 1000, 'Sine.easeInOut');
         
-        // Confetti!
-        const emitter = this.add.particles(this.robot.x, this.robot.y, 'sparkle', {
+        // Puppy leaps onto robot's head!
+        this.puppyRescued = false;
+        this.tweens.add({
+            targets: this.goal,
+            x: this.robot.x,
+            y: this.robot.y - 70,
+            scaleX: 0.7,
+            scaleY: 0.7,
+            angle: 360,
+            duration: 800,
+            ease: 'Back.easeOut',
+            onComplete: () => {
+                this.puppyRescued = true;
+            }
+        });
+        
+        // Heart Confetti!
+        const emitter = this.add.particles(this.robot.x, this.robot.y - 45, 'heart', {
             speed: { min: 200, max: 400 },
             angle: { min: 200, max: 340 },
             gravityY: 400,
-            scale: { start: 1, end: 0 },
+            scale: { start: 1.5, end: 0 },
             lifespan: 2000,
             quantity: 50
         });
@@ -336,7 +357,12 @@ export default class LevelScene extends Phaser.Scene {
     failLevel(isTimeout = false) {
         if (this.isGameOver) return;
         this.isGameOver = true;
+        
+        // Puppy becomes sad and whimpers
+        this.goal.setTexture('puppy_sad');
+        audio.playWhimper();
         audio.playLose();
+        
         this.cameras.main.shake(300, 0.01);
         this.time.delayedCall(1000, () => {
             this.scene.pause();
@@ -345,7 +371,14 @@ export default class LevelScene extends Phaser.Scene {
     }
 
     update() {
-        // No procedural clouds to update
+        // Keep rescued puppy perfectly on top of robot's head during victory dance
+        if (this.puppyRescued && this.goal && this.robot) {
+            this.goal.x = this.robot.x;
+            this.goal.y = this.robot.y - 70;
+            this.goal.angle = this.robot.angle;
+            this.goal.scaleX = 0.7;
+            this.goal.scaleY = 0.7;
+        }
     }
 
     resize(gameSize) {
